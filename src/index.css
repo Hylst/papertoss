@@ -1,0 +1,709 @@
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overscroll-behavior: none;
+  background: #0f172a;
+}
+
+.game-stage {
+  touch-action: none;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.game-world {
+  position: absolute;
+  inset: -50px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ===== ENVIRONMENTS ===== */
+.env-wall {
+  position: absolute;
+  inset: 0 0 48% 0;
+  background: linear-gradient(180deg, #647b96 0%, #9fb0c2 100%);
+}
+
+.env-floor {
+  position: absolute;
+  inset: 48% 0 0 0;
+  background: linear-gradient(180deg, #e3caa1 0%, #9b6841 72%, #6d4227 100%);
+}
+
+.env-grid {
+  position: absolute;
+  inset: 48% -20% 0 -20%;
+  background:
+    linear-gradient(74deg, transparent 49.65%, rgba(74, 46, 28, 0.24) 49.9%, rgba(74, 46, 28, 0.24) 50.1%, transparent 50.35%),
+    linear-gradient(106deg, transparent 49.65%, rgba(74, 46, 28, 0.24) 49.9%, rgba(74, 46, 28, 0.24) 50.1%, transparent 50.35%),
+    repeating-linear-gradient(180deg, rgba(74, 46, 28, 0.18) 0 2px, transparent 2px 58px);
+  opacity: 0.55;
+  transform-origin: top center;
+}
+
+.env-light {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 6%, rgba(255, 255, 255, 0.2), transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.15), transparent 50%);
+  pointer-events: none;
+}
+
+/* ===== OFFICE OBJECTS ===== */
+.env-object {
+  position: absolute;
+  z-index: 1;
+}
+
+.env-desk {
+  bottom: 52%;
+  left: 5%;
+  width: 120px;
+  height: 60px;
+  background: linear-gradient(180deg, #8b7355 0%, #6b5340 100%);
+  border-radius: 4px;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
+  clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 100%);
+}
+
+.env-chair {
+  bottom: 50%;
+  left: 25%;
+  width: 40px;
+  height: 50px;
+  background: linear-gradient(180deg, #4a5568 0%, #2d3748 100%);
+  border-radius: 8px 8px 0 0;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.env-window {
+  top: 5%;
+  left: 15%;
+  width: 100px;
+  height: 120px;
+  background: linear-gradient(180deg, #87ceeb 0%, #b4d4e7 100%);
+  border: 6px solid #5a4a3a;
+  border-radius: 4px;
+  box-shadow: inset 0 0 20px rgba(135, 206, 235, 0.5);
+}
+
+.env-plant {
+  bottom: 50%;
+  right: 8%;
+  width: 30px;
+  height: 45px;
+  background: linear-gradient(180deg, #228b22 0%, #006400 100%);
+  border-radius: 50% 50% 10% 10%;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.env-plant::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 25%;
+  width: 50%;
+  height: 18px;
+  background: #8b4513;
+  border-radius: 0 0 4px 4px;
+}
+
+.env-bookshelf {
+  top: 15%;
+  right: 5%;
+  width: 60px;
+  height: 140px;
+  background: linear-gradient(180deg, #5a4a3a 0%, #3a2a1a 100%);
+  border-radius: 2px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.env-bookshelf::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  right: 5px;
+  bottom: 10px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      #dc2626 0 12px,
+      #2563eb 12px 24px,
+      #16a34a 24px 36px,
+      #9333ea 36px 48px
+    );
+  border-radius: 1px;
+}
+
+/* ===== ROOFTOP OBJECTS ===== */
+.env-sky {
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: linear-gradient(180deg, #1e3a5f 0%, #3d6a9f 60%, #f59e0b 100%);
+}
+
+.env-railing {
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #4a5568 0 20px, transparent 20px 30px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.env-clouds {
+  top: 10%;
+  left: 10%;
+  width: 80px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  animation: clouds-float 20s linear infinite;
+}
+
+.env-building {
+  bottom: 50%;
+  right: 10%;
+  width: 80px;
+  height: 160px;
+  background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+  clip-path: polygon(0 20%, 30% 0, 60% 15%, 100% 0, 100% 100%, 0 100%);
+}
+
+/* ===== HALLWAY OBJECTS ===== */
+.env-door-left {
+  top: 20%;
+  left: 5%;
+  width: 60px;
+  height: 100px;
+  background: linear-gradient(180deg, #8b7355 0%, #6b5340 100%);
+  border: 4px solid #4a3a2a;
+  border-radius: 2px;
+}
+
+.env-door-right {
+  top: 20%;
+  right: 8%;
+  width: 55px;
+  height: 95px;
+  background: linear-gradient(180deg, #7a6348 0%, #5a4330 100%);
+  border: 4px solid #3a2a1a;
+  border-radius: 2px;
+}
+
+.env-painting {
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 60px;
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
+  border: 6px solid #1f2937;
+  border-radius: 2px;
+}
+
+.env-lamp {
+  top: 5%;
+  left: 50%;
+  width: 30px;
+  height: 50px;
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+  clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+}
+
+/* ===== GARDEN OBJECTS ===== */
+.env-tree-left {
+  bottom: 50%;
+  left: 3%;
+  width: 50px;
+  height: 80px;
+  background: radial-gradient(ellipse at 50% 60%, #22c55e 0%, #16a34a 100%);
+  border-radius: 50% 50% 10% 10%;
+}
+
+.env-tree-left::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: 40%;
+  width: 20%;
+  height: 35px;
+  background: #854d0e;
+  border-radius: 2px;
+}
+
+.env-tree-right {
+  bottom: 50%;
+  right: 5%;
+  width: 60px;
+  height: 90px;
+  background: radial-gradient(ellipse at 50% 60%, #34d399 0%, #10b981 100%);
+  border-radius: 50% 50% 10% 10%;
+}
+
+.env-tree-right::after {
+  content: '';
+  position: absolute;
+  bottom: -35px;
+  left: 42%;
+  width: 16%;
+  height: 40px;
+  background: #92400e;
+  border-radius: 2px;
+}
+
+.env-flowerbed {
+  bottom: 50%;
+  left: 40%;
+  width: 80px;
+  height: 20px;
+  background: linear-gradient(90deg, #f472b6 0%, #c084fc 33%, #fb923c 66%, #f472b6 100%);
+  border-radius: 4px;
+}
+
+.env-bush {
+  bottom: 50%;
+  right: 25%;
+  width: 40px;
+  height: 30px;
+  background: radial-gradient(ellipse at 50% 60%, #22c55e 0%, #15803d 100%);
+  border-radius: 50%;
+}
+
+/* ===== WAREHOUSE OBJECTS ===== */
+.env-crate-left {
+  bottom: 50%;
+  left: 8%;
+  width: 60px;
+  height: 50px;
+  background: linear-gradient(180deg, #a1805a 0%, #7c5a3a 100%);
+  border: 3px solid #5a3a1a;
+  border-radius: 2px;
+}
+
+.env-crate-right {
+  bottom: 52%;
+  right: 12%;
+  width: 50px;
+  height: 45px;
+  background: linear-gradient(180deg, #8b6d4a 0%, #6b4d2a 100%);
+  border: 3px solid #4b2d0a;
+  border-radius: 2px;
+}
+
+.env-shelf {
+  top: 20%;
+  right: 5%;
+  width: 100px;
+  height: 8px;
+  background: #4a3a2a;
+  box-shadow: 0 4px 0 #3a2a1a, 0 60px 0 #4a3a2a, 0 64px 0 #3a2a1a;
+}
+
+.env-pipe {
+  top: 0;
+  left: 20%;
+  width: 12px;
+  height: 50%;
+  background: linear-gradient(90deg, #6b7280 0%, #9ca3af 50%, #6b7280 100%);
+}
+
+/* ===== FLOATING PARTICLES ===== */
+.env-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: particle-float 6s ease-in-out infinite;
+}
+
+/* ===== HUD ELEMENTS ===== */
+.hud-panel {
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.14);
+  backdrop-filter: blur(18px);
+}
+
+.hud-button {
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: white;
+  padding: 0.78rem 1.1rem;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(18px);
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.hud-button:hover {
+  background: rgba(15, 23, 42, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.26);
+}
+
+.hud-button:active {
+  transform: translateY(0);
+}
+
+.level-badge {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  border-radius: 12px;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 900;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+}
+
+/* ===== WIND ===== */
+.wind-ribbon {
+  position: absolute;
+  z-index: 4;
+  width: clamp(96px, 14vw, 240px);
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(224, 242, 254, 0.95), transparent);
+  filter: blur(0.2px);
+  animation: wind-slide linear infinite;
+}
+
+/* ===== TRASH CAN ===== */
+.target-wrap {
+  position: absolute;
+  z-index: 8;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 28px 22px rgba(30, 41, 59, 0.34));
+}
+
+.trash-can {
+  width: 100%;
+  overflow: visible;
+  transform-origin: 50% 80%;
+}
+
+.trash-can-hit {
+  animation: can-bump 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.target-distance {
+  margin-top: -0.1rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-shadow: 0 2px 14px rgba(15, 23, 42, 0.48);
+}
+
+/* ===== DISTANCE READOUT ===== */
+.distance-readout {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: min(92vw, 760px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: rgba(255, 255, 255, 0.78);
+  padding: 0.68rem 1.1rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  backdrop-filter: blur(18px);
+  white-space: nowrap;
+}
+
+.distance-readout strong {
+  color: white;
+  font-size: 1rem;
+}
+
+/* ===== PAPER BALL ===== */
+.paper-ball-wrap {
+  position: absolute;
+  z-index: 24;
+  filter: drop-shadow(0 14px 14px rgba(15, 23, 42, 0.24));
+  transform-origin: center;
+  will-change: left, top, transform;
+}
+
+.paper-idle {
+  animation: paper-idle 1.8s ease-in-out infinite;
+}
+
+.paper-missed {
+  animation: paper-crumple 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.paper-scored {
+  animation: paper-score 560ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.paper-shadow {
+  position: absolute;
+  z-index: 12;
+  border-radius: 999px;
+  background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0.5), transparent 72%);
+  transform: translate(-50%, -50%);
+  will-change: left, top, opacity, width;
+}
+
+.paper-shadow-score {
+  animation: shadow-pop 520ms ease-out;
+}
+
+.paper-trail {
+  position: absolute;
+  z-index: 18;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(186, 230, 253, 0.6));
+  transform: translate(-50%, -50%);
+  filter: blur(2px);
+}
+
+/* ===== SCORE POPUP ===== */
+.score-popup {
+  position: absolute;
+  z-index: 50;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #fbbf24;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transform: translate(-50%, -50%);
+  animation: score-fly 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+/* ===== LEVEL PANEL ===== */
+.level-panel {
+  position: absolute;
+  right: 1rem;
+  top: 8.5rem;
+  z-index: 40;
+  width: min(92vw, 320px);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 1rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(18px);
+  animation: panel-in 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.level-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.06);
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #0f172a;
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.level-button:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.12);
+  transform: translateX(3px);
+}
+
+.level-button-active {
+  background: #0ea5e9;
+  color: white;
+}
+
+.level-button-locked {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes wind-slide {
+  0% {
+    transform: translateX(-48px) scaleX(0.42);
+  }
+  48% {
+    transform: translateX(36px) scaleX(1);
+  }
+  100% {
+    transform: translateX(130px) scaleX(0.2);
+  }
+}
+
+@keyframes paper-idle {
+  0%, 100% {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: -8px;
+  }
+}
+
+@keyframes paper-crumple {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  45% {
+    transform: translate(-50%, -50%) scale(1.2, 0.65);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes paper-score {
+  0% {
+    filter: drop-shadow(0 14px 14px rgba(15, 23, 42, 0.24));
+    transform: translate(-50%, -50%) scale(1);
+  }
+  45% {
+    filter: drop-shadow(0 0 32px rgba(251, 191, 36, 0.9));
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+  100% {
+    filter: drop-shadow(0 14px 14px rgba(15, 23, 42, 0.24));
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes can-bump {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  35% {
+    transform: rotate(-5deg) scale(1.08);
+  }
+  68% {
+    transform: rotate(4deg) scale(0.96);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes shadow-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  45% {
+    transform: translate(-50%, -50%) scale(1.4, 0.65);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes panel-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes score-fly {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-50%, -120%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -200%) scale(0.8);
+  }
+}
+
+@keyframes particle-float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-5px);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translateY(-30px) translateX(15px);
+    opacity: 0.5;
+  }
+}
+
+@keyframes clouds-float {
+  0% {
+    transform: translateX(-100px);
+  }
+  100% {
+    transform: translateX(calc(100vw + 100px));
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 720px) {
+  .hud-panel {
+    border-radius: 20px;
+  }
+
+  .distance-readout {
+    gap: 0.62rem;
+    max-width: 94vw;
+    padding-inline: 0.82rem;
+  }
+
+  .level-panel {
+    top: 6.5rem;
+    right: 0.75rem;
+  }
+
+  .env-desk,
+  .env-bookshelf {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle,
+  .env-clouds,
+  .wind-ribbon {
+    animation: none;
+  }
+}
