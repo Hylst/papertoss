@@ -1,12 +1,12 @@
-# Paper Toss
+# Boule de Papier
 
 **La corbeille du bureau.**
 
-Paper Toss : glissez vers le haut, compensez le vent et visez la corbeille. Cinq étages, score, série et record local.
+Boule de Papier : glissez vers le haut, compensez le vent et visez la corbeille. Cinq étages, score, série et record local.
 
 Joue ici : [games.hylst.fr/papertoss/](https://games.hylst.fr/papertoss/)
 
-![Paper Toss](og-image.png)
+![Boule de Papier](og-image.png)
 
 ## Comment on joue
 

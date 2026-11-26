@@ -27,7 +27,7 @@
     "vite": "7.3.2",
     "vite-plugin-singlefile": "2.3.0"
   },
-  "description": "Paper Toss : glissez vers le haut, compensez le vent et visez la corbeille. Cinq étages, score, série et record local.",
+  "description": "Boule de Papier : glissez vers le haut, compensez le vent et visez la corbeille. Cinq étages, score, série et record local.",
   "license": "AGPL-3.0-or-later",
   "author": "Geoffroy (Hylst)"
 }

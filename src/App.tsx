@@ -549,7 +549,7 @@ export default function App() {
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
         role="application"
-        aria-label="Jeu Paper Toss. Glissez vers le haut pour lancer la boule de papier dans la corbeille."
+        aria-label="Jeu Boule de Papier. Glissez vers le haut pour lancer la boule de papier dans la corbeille."
       >
         <div className="game-world" style={worldStyle}>
           <EnvironmentBackground environment={currentLevel.environment} />
@@ -575,7 +575,7 @@ export default function App() {
             <div className="flex items-center gap-3">
               <div className="level-badge">{currentLevel.id}</div>
               <div>
-                <p className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-sky-200 sm:text-sm sm:tracking-[0.36em]">Paper Toss</p>
+                <p className="text-[0.6rem] font-black uppercase tracking-[0.3em] text-sky-200 sm:text-sm sm:tracking-[0.36em]">Boule de Papier</p>
                 <h1 className="mt-0.5 text-2xl font-black tracking-[-0.06em] sm:text-5xl">{currentLevel.name}</h1>
               </div>
             </div>
